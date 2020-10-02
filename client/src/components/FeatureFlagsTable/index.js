@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, CardTitle, Table, Collapse, Input, Button, CardFooter, CardHeader } from 'reactstrap';
+import { Card, CardBody, Table, Collapse, Input, Button, CardFooter, CardHeader, InputGroupAddon, InputGroup } from 'reactstrap';
 import axios from 'axios';
 import './style.css';
 
@@ -23,19 +23,27 @@ const styles = {
   },
   cardFooter: {
     color: "red"
+  },
+  newFlagGroup: {
+    width: "100%",
+  },
+  newFlagInput: {
+    textAlign: "center"
   }
+
 }
 
 function FeatureFlagsTable() {
   const url = `http://localhost:8080/api/v1/featureflags` // hardcoding server url for now, can switch to .env later
   const [featureFlags, setFeatureFlags] = useState([]);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true); // wireframes show an expand/collapse feature, so I decided to implement it
   const [dataDirty, setDataDirty] = useState(false);
   // using index instead of the flag name so we don't have to loop through all of the flags to find the active one
   const [activeFlagIndex, setActiveFlagIndex] = useState(-1);
   const [, setState] = useState();
   const [newFlagName, setNewFlagName] = useState("");
   const [errorText, setErrorText] = useState("");
+  const [editMode, setEditMode] = useState("");
 
   function handleUpdate() {
     setState({});
@@ -79,16 +87,18 @@ function FeatureFlagsTable() {
     setActiveFlagIndex(featureIndex);
     handleUpdate();
     setDataDirty(true);
+    setEditMode("EXISTING");
   }
 
   function onSaveClick() {
     axios.post(url, featureFlags[activeFlagIndex]).then((response) => {
       setFeatureFlags(response.data);
       setDataDirty(false);
+      setNewFlagName("");
       setActiveFlagIndex(-1);
     }).catch(() => {
       // for now, I won't be checking specific error codes, but can later
-      setErrorText("Cannot save flag. Please try again later.")
+      setErrorText(`Cannot ${editMode === "EXISTING" ? "save" : "add"} flag. Please try again later.`)
     });
   }
 
@@ -125,14 +135,11 @@ function FeatureFlagsTable() {
   // however, it doesn't support remove a flag from db, so I can't include that workflow here
   function addNewFlag() {
     const newFlag = { name: newFlagName.trim(), value: 0 }
-    axios.post(url, newFlag).then((response) => {
-      setFeatureFlags(response.data);
-      setNewFlagName("");
-    }).catch(() => {
-      // for now, I won't be checking specific error codes, but can later
-      setErrorText("Cannot add new flag, please try again later");
-    });
-
+    featureFlags.push(newFlag);
+    setNewFlagName("");
+    setEditMode("NEW");
+    setDataDirty(true);
+    setActiveFlagIndex(featureFlags.length-1);
   }
 
   return (
@@ -169,33 +176,38 @@ function FeatureFlagsTable() {
                 })
               }
               <tr>
-                <td>
-                  <Input value={newFlagName} onKeyPress={onNewFlagKeyPress} onChange={handleNewFlagNameChange} type="text" placeholder="Enter a new flag" />
-
-                </td>
-                <td>
-                  {
-                    newFlagName !== "" ? <Button onClick={addNewFlag} color="primary">Ok</Button> : null
-                  }
+                <td className="text-left">
+                  <InputGroup style={styles.newFlagGroup}>
+                    <Input style={styles.newFlagInput} value={newFlagName} onKeyPress={onNewFlagKeyPress} onChange={handleNewFlagNameChange} type="text" placeholder="Enter a new flag" />
+                    <InputGroupAddon addonType="append">
+                      {
+                        newFlagName !== "" ? <Button style={styles.newFlagOk} onClick={addNewFlag} color="primary">Ok</Button> : null
+                      }
+                    </InputGroupAddon>
+                  </InputGroup>
+                  
                 </td>
               </tr>
             </tbody>
           </Table>
-          {
-            dataDirty === true ?
-              (
-                <div style={styles.cardActions}>
-                  <Button className="saveCancel" onClick={onCancelClick}>Cancel</Button>
-                  <Button className="saveCancel" color="primary" onClick={onSaveClick}>Save</Button>
-                </div>
-              )
-              :
-              null
-          }
+          
 
 
         </CardBody>
-        <CardFooter style={styles.cardFooter}>{errorText}</CardFooter>
+        <CardFooter style={styles.cardFooter} className="clearfix">
+          {errorText}
+          {
+              dataDirty === true ?
+                (
+                  <div style={styles.cardActions} className="clearfix">
+                    <Button className="saveCancel" onClick={onCancelClick}>Cancel</Button>
+                    <Button className="saveCancel" color="primary" onClick={onSaveClick}>Save</Button>
+                  </div>
+                )
+                :
+                null
+            }
+        </CardFooter>
       </Collapse>
     </Card>
   )
