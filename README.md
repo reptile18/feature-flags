@@ -29,4 +29,10 @@ useAwesomeGames      |     0|      1|       0|      1|       1
 useNewFeature        |     0|      0|       0|      0|       0
 Identity_Information |     0|      0|       0|      1|       1
 
-Test clicking each of the checkboxes to verify the values change. This proves that the post request from the front end React app is reaching through the Java Spring server and to the microservice.
+Test clicking each of the checkboxes. Only one row is allowed to edited at a time. A save button should appear to save the flags for that row. Once the Save button is clicked, the values should be set. This proves that the post request from the front end React app is reaching through the Java Spring server and to the microservice. 
+
+Test making a change and then clicking Cancel. The values should be reset from the server.
+
+Test adding a new flag by typing in the input box and clicking Ok. A new row should be added with blank checkboxes.
+
+Test expanding and collapsing the table by clicking +/- at the top right of the component.
