@@ -8,3 +8,18 @@
                                 supported by Chrome, Edge, Opera and Firefox */
   cursor: pointer;
 }
+.saveCancel {
+  margin: 0px 3px 0px 3px;
+}
+
+.flagInactive {
+  color: lightgray;
+}
+
+.flagRowActive {
+  background-color: lightblue !important;
+}
+
+.flagRow:hover {
+  background-color: rgb(244, 252, 255);
+}
