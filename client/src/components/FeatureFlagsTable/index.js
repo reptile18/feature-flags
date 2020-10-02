@@ -1,6 +1,24 @@
 import React, { useState, useEffect} from 'react';
 import { Card, CardBody, CardText, CardTitle, Table, Collapse, Input } from 'reactstrap';
 import axios from 'axios';
+import './style.css';
+
+const styles = {
+  featureFlagsMgrHeader: {
+    backgroundColor: 'navy',
+    color: 'white',
+    padding: '1em',
+    textAlign: 'left',
+    display: 'flex',
+    fontWeight: 'bold'
+  },
+  mgrTitle: {
+    flexGrow: '1'
+  },
+  mgrExpandCollapse: {
+    flexShrink: '1'
+  }
+}
 
 function FeatureFlagsTable() {
   const url=`http://localhost:8080/api/v1/featureflags`
@@ -44,10 +62,10 @@ function FeatureFlagsTable() {
   return (
     <Card>
       <CardBody>
-        <CardTitle>
-          Feature Flag Manager
+        <CardTitle style={styles.featureFlagsMgrHeader}>
+          <span style={styles.mgrTitle}>Feature Flag Manager</span>
           &nbsp;
-          <span onClick={onExpandCollapseClick}>{isOpen ? '-' : '+'}</span>
+          <span className="no-select" onClick={onExpandCollapseClick}>{isOpen ? '—' : '＋'}</span>
         </CardTitle>
         <CardText>
           <Collapse isOpen={isOpen}>
