@@ -22,7 +22,8 @@ const styles = {
     float: "right"
   },
   cardFooter: {
-    color: "red"
+    color: "red",
+    textAlign: "left"
   },
   newFlagGroup: {
     width: "100%",
