@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.service.FeatureFlagsService;
 
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RequestMapping("api/v1/featureflags")
 @RestController
 public class FeatureFlagsController {
