@@ -33,6 +33,6 @@ Test clicking each of the checkboxes. Only one row is allowed to edited at a tim
 
 Test making a change and then clicking Cancel. The values should be reset from the server.
 
-Test adding a new flag by typing in the input box and clicking Ok. A new row should be added with blank checkboxes.
+Test adding a new flag by typing in the input box and clicking Ok. A new row should be added with blank checkboxes. Set some values and click Save. Or click Cancel to remove.
 
 Test expanding and collapsing the table by clicking +/- at the top right of the component.
